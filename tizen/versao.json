@@ -1,0 +1,78 @@
+{
+    "versao":  "202611141411",
+    "pacoteMinimo":  "1.0.0",
+    "scripts":  [
+                    {
+                        "caminho":  "js/core.js",
+                        "sha256":  "a70f769a535c328ee3b5015bce02a3fbd41887f07c25086b0ed753927282cee2"
+                    },
+                    {
+                        "caminho":  "js/m3u.js",
+                        "sha256":  "eb82d508557e601499c6db520224e71ff286353b7a5d0d06b59da3d736f5b016"
+                    },
+                    {
+                        "caminho":  "js/prefs.js",
+                        "sha256":  "19b77d07e6c56c97888ba2cb3f2722fb4082463833d13c0fc25df28094363cd9"
+                    },
+                    {
+                        "caminho":  "js/catalog.js",
+                        "sha256":  "9c814441d6d5c63b1429927002f9e22b5ecbf4f846bc13e376bf16f8de656d8a"
+                    },
+                    {
+                        "caminho":  "js/discovery.js",
+                        "sha256":  "a7d7e26f965f72441694da7bf85f45d374f39a75e1b796ee0e132a29e387aea6"
+                    },
+                    {
+                        "caminho":  "js/subtitles.js",
+                        "sha256":  "e6f9c1ea8dfceeeabc2eb4e8728e5e854efcc3b171d0920593941168c1e0cb2e"
+                    },
+                    {
+                        "caminho":  "js/player.js",
+                        "sha256":  "14408d2288927f5356c937222066ca703606d8f28f8b293026c4ea883714873d"
+                    },
+                    {
+                        "caminho":  "js/lib/mp4box.all.min.js",
+                        "sha256":  "07ccf31d127803dd1cca1208bbfd0983b21f795cb0d2b80687a7ec6bdb391219"
+                    },
+                    {
+                        "caminho":  "js/reserve-player.js",
+                        "sha256":  "e3d756490d1c1733dffea9f13596ed72d40e8631714f555ab8629d94cfb66fab"
+                    },
+                    {
+                        "caminho":  "js/nav.js",
+                        "sha256":  "e462378ee504df116eaaabd47a1502311a514762e07379c30f5ef91f7208db3e"
+                    },
+                    {
+                        "caminho":  "js/ui.js",
+                        "sha256":  "e1ba8fcf211b6a872ffda629af1a22779739b94acfbc67adaebe853bfe25544a"
+                    },
+                    {
+                        "caminho":  "js/ui-login.js",
+                        "sha256":  "39d0e869ade93cae375e2ca9e542651c4275585e37b9959385015b525268a0a9"
+                    },
+                    {
+                        "caminho":  "js/ui-live.js",
+                        "sha256":  "3d32c8af3243710cc56eb66438fe4d498e0765852d73f5072752e98523ffa87c"
+                    },
+                    {
+                        "caminho":  "js/ui-vod.js",
+                        "sha256":  "3c7fe73fd70044c765d39b4344c1576d586606eccbefcdecba9b4dfc22a10274"
+                    },
+                    {
+                        "caminho":  "js/ui-player.js",
+                        "sha256":  "050d78221ca25d9428784dfb5b9e666f2ef2cd4298441a3c5a14cc66f442e996"
+                    },
+                    {
+                        "caminho":  "js/ui-settings.js",
+                        "sha256":  "cd8b7903288f92e5188646cf2323f69793271e0b7f30f059a47cb0219732adbd"
+                    },
+                    {
+                        "caminho":  "js/app.js",
+                        "sha256":  "31f41dde995b5e2a6e6a410b88a777b58f55bcecd5462834354b0efb0ed6bf5b"
+                    }
+                ],
+    "estilo":  {
+                   "caminho":  "css/app.css",
+                   "sha256":  "06ed48790e093490bd9feedb17602243306922eccb61d59f25d561d715203f3d"
+               }
+}
