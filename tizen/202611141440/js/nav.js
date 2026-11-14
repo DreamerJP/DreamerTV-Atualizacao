@@ -37,6 +37,10 @@ App.nav = (function () {
     App.$$('.focused').forEach(function (old) { if (old !== el) old.classList.remove('focused'); });
     el.classList.add('focused');
     el.focus({ preventScroll: true });
+    // Long lists grow from here: the browser sends no focus event while the page lacks system focus.
+    for (var node = el; node.parentElement; node = node.parentElement) {
+      if (node.parentElement._onNavFocus) { node.parentElement._onNavFocus(node); break; }
+    }
     scrollIntoView(el);
     var group = el.closest('[data-group]');
     if (group) group._last = el;
@@ -83,12 +87,27 @@ App.nav = (function () {
     return null;
   }
 
+  // In long lists only the neighbours of the current item can be the next one; measuring every loaded
+  // card on each arrow press made the response grow with the list.
+  var NEAR = 40;
+  function candidates(root, from) {
+    var parent = from.parentElement;
+    var siblings = parent.children;
+    if (siblings.length <= NEAR * 2) return focusables(root);
+    var at = Array.prototype.indexOf.call(siblings, from);
+    var out = App.$$('.focusable', root).filter(function (el) { return el.parentElement !== parent; });
+    for (var i = Math.max(0, at - NEAR); i < Math.min(siblings.length, at + NEAR + 1); i++) {
+      if (siblings[i].classList.contains('focusable')) out.push(siblings[i]);
+    }
+    return out.filter(visible);
+  }
+
   function move(direction) {
     var layer = top();
     if (!layer) return;
     var from = current();
-    var list = focusables(layer.root);
-    if (!from) { focus(layer.initial && visible(layer.initial) ? layer.initial : list[0]); return; }
+    if (!from) { var all = focusables(layer.root); focus(layer.initial && visible(layer.initial) ? layer.initial : all[0]); return; }
+    var list = candidates(layer.root, from);
     var a = from.getBoundingClientRect();
     var ax = a.left + a.width / 2, ay = a.top + a.height / 2;
     var best = null, bestScore = Infinity;
@@ -258,10 +277,9 @@ App.lazyList = function (container, items, render, chunk) {
     rendered = end;
   }
   more();
-  container.onfocusin = function (e) {
-    var node = e.target;
-    while (node && node.parentElement !== container) node = node.parentElement;
-    if (node && node._index !== undefined && node._index >= rendered - Math.max(15, chunk / 3) && rendered < items.length) more();
+  container._onNavFocus = function (node) {
+    if (node._index !== undefined && node._index >= rendered - Math.max(15, chunk / 3) && rendered < items.length) more();
   };
+  container.onfocusin = null;
   return { more: more, get count() { return rendered; } };
 };
