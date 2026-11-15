@@ -30,12 +30,16 @@ App.nav = (function () {
     return App.$$('.focusable', root).filter(visible);
   }
 
+  // The highlight follows a class: the page may not own the system focus (for example during start-up).
+  function highlight(el) {
+    App.$$('.focused').forEach(function (old) { if (old !== el) old.classList.remove('focused'); });
+    el.classList.add('focused');
+  }
+
   function focus(el) {
     if (!el) return;
     if (!el.hasAttribute('tabindex') && !/^(INPUT|BUTTON|TEXTAREA)$/.test(el.tagName)) el.setAttribute('tabindex', '-1');
-    // The highlight follows a class: the page may not own the system focus (for example during start-up).
-    App.$$('.focused').forEach(function (old) { if (old !== el) old.classList.remove('focused'); });
-    el.classList.add('focused');
+    highlight(el);
     el.focus({ preventScroll: true });
     // Long lists grow from here: the browser sends no focus event while the page lacks system focus.
     for (var node = el; node.parentElement; node = node.parentElement) {
@@ -139,19 +143,32 @@ App.nav = (function () {
     return false;
   }
 
+  // The text field that receives the typing, which may differ from the highlighted item
+  // (a field picked with the mouse or opened by the TV keyboard).
+  function editing() {
+    var a = document.activeElement;
+    return a && /^(INPUT|TEXTAREA)$/.test(a.tagName) ? a : null;
+  }
+
   function onKeyDown(e) {
     var key = e.keyCode;
     var layer = top();
     if (!layer) return;
-    var el = current();
-    if (key === K.BACK || key === K.ESC || (key === 8 && !(el && el.tagName === 'INPUT'))) {
+    var field = editing();
+    // While typing, Delete erases text and Back only closes the keyboard; neither leaves the screen.
+    if (field && key === 8) return;
+    if (field && (key === K.BACK || key === K.ESC)) { e.preventDefault(); field.blur(); highlight(field); return; }
+    var el = field && field.classList.contains('focusable') ? field : current();
+    if (key === K.BACK || key === K.ESC || key === 8) {
       e.preventDefault();
       if (layer.onBack) layer.onBack();
       return;
     }
     if (layer.onKey && layer.onKey(e, el) === true) { e.preventDefault(); return; }
     if (key === K.ENTER) {
-      if (el && el.tagName === 'INPUT') return;
+      if (field) return;
+      // A highlighted field whose keyboard was closed with Back opens it again with OK.
+      if (el && /^(INPUT|TEXTAREA)$/.test(el.tagName)) { e.preventDefault(); el.focus(); return; }
       e.preventDefault();
       if (e.repeat || enterDown) return;
       enterDown = true;
@@ -178,7 +195,7 @@ App.nav = (function () {
   function onKeyUp(e) {
     if (e.keyCode !== K.ENTER) return;
     var el = current();
-    if (el && el.tagName === 'INPUT') return;
+    if (editing() || (el && /^(INPUT|TEXTAREA)$/.test(el.tagName))) return;
     clearTimeout(enterTimer);
     var wasDown = enterDown;
     enterDown = false;
@@ -187,6 +204,11 @@ App.nav = (function () {
 
   document.addEventListener('keydown', onKeyDown, true);
   document.addEventListener('keyup', onKeyUp, true);
+  // A field chosen with the mouse or the TV keyboard takes the highlight too.
+  document.addEventListener('focusin', function (e) {
+    var t = e.target;
+    if (t && t.classList && t.classList.contains('focusable') && /^(INPUT|TEXTAREA)$/.test(t.tagName)) highlight(t);
+  }, true);
 
   return {
     focus: focus,

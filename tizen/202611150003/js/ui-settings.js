@@ -109,8 +109,8 @@ App.settingsView = (function () {
   function updateLines() {
     var u = window.DreamerUpdate && DreamerUpdate.info();
     if (!u || !u.running) return '';
-    var text = '\nCódigo de ' + versionDate(u.running) + (u.online ? ', recebido pela atualização automática' : ', instalado com o app');
-    if (u.pending) text += '\nAtualização de ' + versionDate(u.pending) + ' baixada: vale na próxima vez que o app abrir.';
+    var text = '\nCódigo: ' + versionDate(u.running) + (u.online ? ' (atualização automática)' : '');
+    if (u.pending) text += '\nAtualização pendente: ' + versionDate(u.pending);
     return text;
   }
 
