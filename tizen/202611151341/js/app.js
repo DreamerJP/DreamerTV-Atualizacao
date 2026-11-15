@@ -25,7 +25,10 @@ App.exitApp = function () {
 App.consumeAutoBoot = (function () {
   var consumed = false;
   return function () {
-    if (consumed || !App.prefs.settings.autoBoot) return false;
+    // A reload that applied an update while a channel was in full screen reopens it once.
+    var afterUpdate = App.kv.get('dtv.reopenLive', false);
+    if (afterUpdate) App.kv.set('dtv.reopenLive', false);
+    if (consumed || !(App.prefs.settings.autoBoot || afterUpdate)) return false;
     consumed = true;
     return true;
   };
@@ -161,6 +164,40 @@ App.mainScreen = (function () {
   };
 })();
 
+/*
+ * Online updates while the app stays open for days (the TV screen is only turned off): look for a new
+ * version when the app comes back and every 6 hours, and apply a downloaded one by reloading when the
+ * app comes back. A channel in full screen is reopened after the reload; a movie or episode in full
+ * screen is never interrupted. This lives here, in code that is updated online, because
+ * js/atualizacao.js only changes with a new package.
+ */
+App.autoUpdate = (function () {
+  var CHECK_EVERY_MS = 6 * 3600000, lastCheck = Date.now();
+  function check() {
+    if (!window.DreamerUpdate) return;
+    lastCheck = Date.now();
+    DreamerUpdate.check();
+  }
+  setInterval(function () { if (Date.now() - lastCheck >= CHECK_EVERY_MS) check(); }, 15 * 60000);
+  return {
+    reload: function () { location.reload(); },
+    /** Called when the app becomes visible again; true when it is reloading to apply a version. */
+    resumed: function () {
+      var info = window.DreamerUpdate && DreamerUpdate.info();
+      if (info && info.pending) {
+        var open = App.playerScreen.isOpen(), playing = App.player.current;
+        if (!open || (playing && playing.live)) {
+          if (open && App.kv.get('dtv.tab', 'live') !== '24h') { App.kv.set('dtv.tab', 'live'); App.kv.set('dtv.reopenLive', true); }
+          App.autoUpdate.reload();
+          return true;
+        }
+      }
+      if (Date.now() - lastCheck >= 60000) check();
+      return false;
+    },
+  };
+})();
+
 (function boot() {
   function scale() {
     var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080) || 1;
@@ -179,6 +216,7 @@ App.mainScreen = (function () {
       if (App.playerScreen.isOpen()) App.playerScreen.background();
       else App.mainScreen.background();
     } else {
+      if (App.autoUpdate.resumed()) return;
       if (App.playerScreen.isOpen()) App.playerScreen.foreground();
       else App.mainScreen.foreground();
     }

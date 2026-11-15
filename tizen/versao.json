@@ -1,5 +1,5 @@
 {
-    "versao":  "202611151331",
+    "versao":  "202611151341",
     "pacoteMinimo":  "1.0.0",
     "scripts":  [
                     {
@@ -68,7 +68,7 @@
                     },
                     {
                         "caminho":  "js/app.js",
-                        "sha256":  "31f41dde995b5e2a6e6a410b88a777b58f55bcecd5462834354b0efb0ed6bf5b"
+                        "sha256":  "6aa4250604ae2d4a2763cea4f90b87e8cf451de49edef5d65153b51e1adfe328"
                     }
                 ],
     "estilo":  {
