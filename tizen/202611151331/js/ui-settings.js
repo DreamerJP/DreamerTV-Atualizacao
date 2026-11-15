@@ -5,7 +5,7 @@ App.settingsView = (function () {
   var el = App.el, ui = App.ui, prefs = App.prefs, catalog = App.catalog;
   var root = App.$('#view-settings');
   var built = false, section = 'content';
-  var nav = {}, panels = {}, titleText, descText, refreshBtn, bufferBtns = {}, bufferDesc, clockBtn, reserveBtn, autoBtn, storageText, clearBtn, accountText, versionText;
+  var nav = {}, panels = {}, titleText, descText, refreshBtn, bufferBtns = {}, bufferDesc, clockBtn, reserveBtn, autoBtn, storageText, clearBtn, accountText, versionText, layoutText, layoutBtn;
   var info = {
     content: ['Lista de conteúdo', 'Mantenha seu catálogo atualizado.'],
     playback: ['Reprodução', 'Escolha como o aplicativo prepara os vídeos.'],
@@ -28,11 +28,18 @@ App.settingsView = (function () {
     descText = el('div', { class: 'desc' });
 
     refreshBtn = ui.button('Atualizar canais, filmes e séries', refresh);
+    layoutText = el('p');
+    layoutBtn = ui.button('Restaurar ordem padrão', resetLayout);
     panels.content = el('div', {}, [el('div', { class: 'box' }, [
       el('h3', { text: 'Atualizar sua lista' }),
       el('p', { text: 'Busque novos canais, filmes e séries. Se a conexão falhar, sua lista atual será mantida.' }),
       refreshBtn,
       el('p', { class: 'small', text: 'Seu acesso, favoritos e histórico são preservados.' }),
+    ]), el('div', { class: 'box' }, [
+      el('h3', { text: 'Categorias de canais' }),
+      layoutText,
+      layoutBtn,
+      el('p', { class: 'small', text: 'Para fixar ou ocultar, segure OK sobre a categoria em TV ao vivo ou 24 horas.' }),
     ])]);
 
     var choices = el('div', { class: 'choices' });
@@ -98,7 +105,31 @@ App.settingsView = (function () {
     autoBtn.textContent = prefs.settings.autoBoot ? 'Ativado' : 'Desativado';
     autoBtn.classList.toggle('selected', prefs.settings.autoBoot);
     versionText.textContent = 'DreamerTV ' + (App.config.version || '1.0.0') + ' para Samsung' + updateLines();
+    updateLayout();
     accountText.textContent = 'Usuário conectado: ' + prefs.username + '\nServidor: ' + prefs.serverUrl;
+  }
+
+  var LISTS = [['live', 'TV ao vivo', function () { return catalog.liveCategories; }], ['24h', '24 horas', function () { return catalog.created24hCategories; }]];
+
+  /** Pinned and hidden categories per list; a name missing from the current list is marked. */
+  function updateLayout() {
+    var cl = App.categoryLayout, lines = [];
+    LISTS.forEach(function (list) {
+      var l = cl.get(list[0]);
+      var present = (list[2]() || []).map(function (c) { return cl.norm(c.name); });
+      var show = function (n) { return n + (present.length && present.indexOf(cl.norm(n)) < 0 ? ' (fora da lista atual)' : ''); };
+      if (l.pins.length) lines.push(list[1] + ', fixadas: ' + l.pins.map(show).join(', '));
+      if (l.hidden.length) lines.push(list[1] + ', ocultas: ' + l.hidden.map(show).join(', '));
+    });
+    layoutText.textContent = lines.length ? lines.join('\n') : 'Nenhuma categoria fixada ou oculta.';
+    layoutBtn.classList.toggle('disabled', !lines.length);
+  }
+
+  function resetLayout() {
+    if (layoutBtn.classList.contains('disabled')) return;
+    LISTS.forEach(function (list) { App.categoryLayout.reset(list[0]); });
+    updateLayout();
+    App.toast('Categorias na ordem padrão');
   }
 
   function versionDate(v) {

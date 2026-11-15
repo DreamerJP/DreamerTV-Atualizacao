@@ -29,11 +29,13 @@ App.ui = (function () {
     return focusable('div', { class: 'btn' + (cls ? ' ' + cls : ''), text: label, onclick: onClick });
   }
 
-  function category(item, name, onClick) {
-    return focusable('div', { class: 'cat', onclick: onClick }, [
+  function category(item, name, onClick, onLong) {
+    var node = focusable('div', { class: 'cat', onclick: onClick }, [
       el('span', { class: 'name', text: name }),
       item.count ? el('span', { class: 'count', text: String(item.count) }) : null,
     ]);
+    if (onLong) node.addEventListener('longpress', onLong);
+    return node;
   }
 
   function channel(item, onClick, onLong) {

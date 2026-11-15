@@ -1,5 +1,5 @@
 {
-    "versao":  "202611150003",
+    "versao":  "202611151331",
     "pacoteMinimo":  "1.0.0",
     "scripts":  [
                     {
@@ -44,7 +44,7 @@
                     },
                     {
                         "caminho":  "js/ui.js",
-                        "sha256":  "e1ba8fcf211b6a872ffda629af1a22779739b94acfbc67adaebe853bfe25544a"
+                        "sha256":  "1f4da3b43308446d5d8d3b18976c1561ea57d6aea7602c67975e2cfa70577427"
                     },
                     {
                         "caminho":  "js/ui-login.js",
@@ -52,7 +52,7 @@
                     },
                     {
                         "caminho":  "js/ui-live.js",
-                        "sha256":  "3d32c8af3243710cc56eb66438fe4d498e0765852d73f5072752e98523ffa87c"
+                        "sha256":  "8490e2ec1af0789dce024c3982fb9afcfe3a529f70d2923c41c4a370afa5cf0e"
                     },
                     {
                         "caminho":  "js/ui-vod.js",
@@ -64,7 +64,7 @@
                     },
                     {
                         "caminho":  "js/ui-settings.js",
-                        "sha256":  "3ad8ff39abfa9cde8cfc65882a9e3178345e3806455df6e1d0ddede8d198e328"
+                        "sha256":  "c3bfbc2234295c672429a70b84d06e05b2be34c9fd6f063e584322fdfe270f58"
                     },
                     {
                         "caminho":  "js/app.js",
