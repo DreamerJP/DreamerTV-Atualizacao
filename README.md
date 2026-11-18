@@ -1,3 +1,6 @@
 # DreamerTV - atualizações
 
-Arquivos publicados automaticamente para a atualização do DreamerTV. Cada versão do app tem a sua pasta (`tizen`). Não editar à mão.
+As TVs consultam a pasta da sua plataforma para encontrar atualizações do DreamerTV.
+
+- [Android](android/versao.json) inclui a versão disponível e o instalador assinado na subpasta numerada. Quem ainda usa uma versão anterior à 1.6.9 precisa instalar o primeiro pacote manualmente.
+- [Tizen](tizen/versao.json) inclui a versão disponível e os arquivos da atualização para TVs Samsung.
