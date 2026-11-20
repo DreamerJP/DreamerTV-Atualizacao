@@ -1,9 +1,9 @@
 {
-  "versao": 37,
-  "nome": "1.6.9",
+  "versao": 38,
+  "nome": "1.6.10",
   "arquivo": {
-    "caminho": "DreamerTV-v1.6.9.apk",
-    "tamanho": 21484825,
-    "sha256": "e3eab6c78e4e05262e3dbb2381c64a8221eda9dda336c3f94089169036d75912"
+    "caminho": "DreamerTV-v1.6.10.apk",
+    "tamanho": 21484837,
+    "sha256": "64e8e430483fdff5129a2bb2c4242caf669b74ce54be0b426ac6f5a4354bf2ba"
   }
 }
